@@ -2,8 +2,8 @@
 
 This repository contains code and trained models for the paper <a href="#">Certified Adversarial Robustness via Randomized Smoothing</a> by [Jeremy Cohen](http://cs.cmu.edu/~jeremiac), Elan Rosenfeld, and [Zico Kolter](http://zicokolter.com).
 
-Randomized smoothing is the state-of-the-art **provable** adversarial defense in L2 norm (as of February 2019).
-It's also the only provable adversarial defense that scales to ImageNet.
+Randomized smoothing is a **provable** adversarial defense in L2 norm which **scales to ImageNet.**
+It's also SOTA on smaller datasets like CIFAR-10 and SVHN where alternative approaches are viable.
 
 ## How does it work?
 
@@ -21,7 +21,7 @@ is corrupted by isotropic Gaussian noise with variance &sigma;<sup>2</sup>.
 For example, let _x_ be the image above on the left.
 Suppose that when _f_ classifies _x_ corrupted by Gaussian noise (the GIF on the right), _f_ returns "panda"
 98\% of the time and "gibbon" 2% of the time.
-Then the prediction of _g_ at _x_ is "panda."
+Then the prediction of _g_ at _x_ is defined to be "panda."
  
 
 Interestingly, _g_ is **provably** robust within an L2 norm ball around _x_, in the sense that for any perturbation 
@@ -80,7 +80,7 @@ Here's what the panda image looks like under these three noise levels:
 </p>
 
 
-This plot shows the certified top-1 accuracy at various radii of these three classifiers.
+The plot below shows the certified top-1 accuracy at various radii of these three classifiers.
 The "certified accuracy" of a classifier _g_ at radius _r_ is defined as test set accuracy that _g_ will 
 provably attain under any possible adversarial attack with L2 norm less than _r_. 
 As you can see, the hyperparameter &sigma; controls a robustness/accuracy tradeoff: when
