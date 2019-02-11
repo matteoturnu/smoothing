@@ -67,7 +67,7 @@ Randomized smoothing was first proposed in [Certified Robustness to Adversarial 
 and later improved upon in [Second-Order Adversarial Attack and Certified Robustness](https://arxiv.org/abs/1809.03113).
 We simply tightened the analysis and showed that it outperforms the other provably L2-robust classifiers that have been proposed in the literature. 
 
-## ImageNet results
+## How does it do on ImageNet?
 
 We constructed three randomized smoothing classifiers for ImageNet, with the hyperparameter
 &sigma; set to 0.25, 0.50, and 1.00.
@@ -103,7 +103,6 @@ The best &sigma; for each radius is denoted with an asterisk.
 <b> &sigma; = 1.00 </b>| 0.44 |0.38 |0.33 |0.26 |0.19<b>*</b> |0.15<b>*</b> |0.12<b>*</b> |
 
 
-<!--
 ## How does it do on CIFAR-10?
 
 <a href="analysis/plots/vary_noise_cifar10_resnet110_test.pdf"><img src="analysis/plots/vary_noise_cifar10_resnet110_test.png" height="300" width="400" ></a>
@@ -114,7 +113,7 @@ The best &sigma; for each radius is denoted with an asterisk.
 <b> &sigma; = 0.25 </b>| 0.77<b>*</b> |0.60<b>*</b> |0.42<b>*</b> |0.24 |0.00 |0.00 |0.00 |
 <b> &sigma; = 0.50 </b>| 0.66 |0.55 |0.42 |0.31<b>*</b> |0.21 |0.14 |0.08 |
 <b> &sigma; = 1.00 </b>| 0.47 |0.40 |0.33 |0.27 |0.22<b>*</b> |0.18<b>*</b> |0.14<b>*</b> |
--->
+
 
 ## This repository
 
@@ -123,9 +122,12 @@ The best &sigma; for each radius is denoted with an asterisk.
 The contents of this repository are as follows:
 
 * [code/](code) contains the code for our experiments.
-* [models/](models) is empty, but if you'd like to run our code, you need to download our models from [here](TODO).
+* [models/](models) is empty, but if you'd like to run our code, you need to populate it with our
+pretrained models by executing: 
+```wget cs.cmu.edu/~jeremiac/smoothing/models/v1 | tar -xvf```
+TODO replace with the correct command
 * [data/](data) contains the raw data from our experiments.
-* [analysis/](analysis) contains the plots and tables, based on the contents of [data](/data), that are shown in our paper.
+* [analysis/](analysis) contains the plots and tables based on that data that are shown in our paper.
 
 ### Smoothed classifiers
 
@@ -190,7 +192,7 @@ will visualize noisy corruptions of the 100-th image from the ImageNet test set 
 * The program [analyze.py](code/analyze.py) generates all of certified accuracy plots and tables that appeared in the
 paper.
 
-Finally, we note that [this file](experiments.MD) describes exactly how to reproduce
+Finallly, we note that [this file](experiments.MD) describes exactly how to reproduce
  our experiments from the paper.
  
  
@@ -210,7 +212,7 @@ conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 conda install scipy pandas statmodels matplotlib seaborn
 pip install setGPU
 ```
-3.  Download our trained models from [here](TODO).
+3.  Download our trained models by executing `curl foobar`
 4. If you want to run ImageNet experiments, obtain a copy of ImageNet and preprocess the `val` directory to look
 like the `train` directory by running [this script](https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/valprep.sh).
 Finally, set the environment variable `IMAGENET_DIR` to the directory where ImageNet is located.
