@@ -111,7 +111,7 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
         targets = targets.to(device)
 
         # augment inputs with noise
-        inputs = inputs + torch.randn_like(inputs) * noise_sd
+        inputs = inputs + torch.randn_like(inputs, device=device) * noise_sd
 
         # compute output
         outputs = model(inputs)
@@ -168,7 +168,7 @@ def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd:
             targets = targets.to(device)
 
             # augment inputs with noise
-            inputs = inputs + torch.randn_like(inputs) * noise_sd
+            inputs = inputs + torch.randn_like(inputs, device=device) * noise_sd
 
             # compute output
             outputs = model(inputs)
