@@ -7,14 +7,15 @@ import os
 import torch
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
-from datasets import get_dataset, DATASETS
-from architectures import ARCHITECTURES, get_architecture
+from smoothing.code.datasets import get_dataset, DATASETS
+from smoothing.code.architectures import ARCHITECTURES, get_architecture
 from torch.optim import SGD, Optimizer
 from torch.optim.lr_scheduler import StepLR
 import time
 import datetime
-from train_utils import AverageMeter, accuracy, init_logfile, log
+from smoothing.code.train_utils import AverageMeter, accuracy, init_logfile, log
 
+"""
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 parser.add_argument('dataset', type=str, choices=DATASETS)
 parser.add_argument('arch', type=str, choices=ARCHITECTURES)
@@ -42,6 +43,7 @@ parser.add_argument('--gpu', default=None, type=str,
 parser.add_argument('--print-freq', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
 args = parser.parse_args()
+"""
 
 
 def main():
