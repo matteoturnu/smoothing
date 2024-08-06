@@ -2,12 +2,12 @@
 import argparse
 import os
 import setGPU
-from datasets import get_dataset, DATASETS, get_num_classes
-from core import Smooth
+from smoothing.code.datasets import get_dataset, DATASETS, get_num_classes
+from smoothing.code.core import Smooth
 from time import time
 import torch
 import datetime
-from architectures import get_architecture
+from smoothing.code.architectures import get_architecture
 
 parser = argparse.ArgumentParser(description='Certify many examples')
 parser.add_argument("dataset", choices=DATASETS, help="which dataset")
