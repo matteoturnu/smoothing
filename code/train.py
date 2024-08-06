@@ -111,7 +111,7 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
         targets = targets.to(device)
 
         # augment inputs with noise
-        inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+        inputs = inputs + torch.randn_like(inputs) * noise_sd
 
         # compute output
         outputs = model(inputs)
@@ -164,13 +164,11 @@ def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd:
             # measure data loading time
             data_time.update(time.time() - end)
 
-            """inputs = inputs.cuda()
-            targets = targets.cuda()"""
             inputs = inputs.to(device)
             targets = targets.to(device)
 
             # augment inputs with noise
-            inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
+            inputs = inputs + torch.randn_like(inputs) * noise_sd
 
             # compute output
             outputs = model(inputs)
