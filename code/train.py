@@ -46,7 +46,7 @@ args = parser.parse_args()
 """
 
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 def main():
     if args.gpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
@@ -97,6 +97,8 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
     top1 = AverageMeter()
     top5 = AverageMeter()
     end = time.time()
+
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # switch to train mode
     model.train()
@@ -151,6 +153,8 @@ def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd:
     top1 = AverageMeter()
     top5 = AverageMeter()
     end = time.time()
+
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # switch to eval mode
     model.eval()
