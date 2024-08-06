@@ -1,5 +1,5 @@
 import torch
-from scipy.stats import norm, binom_test
+from scipy.stats import norm, binomtest
 import numpy as np
 from math import ceil
 from statsmodels.stats.proportion import proportion_confint
@@ -68,7 +68,7 @@ class Smooth(object):
         top2 = counts.argsort()[::-1][:2]
         count1 = counts[top2[0]]
         count2 = counts[top2[1]]
-        if binom_test(count1, count1 + count2, p=0.5) > alpha:
+        if binomtest(count1, count1 + count2, p=0.5) > alpha:
             return Smooth.ABSTAIN
         else:
             return top2[0]
