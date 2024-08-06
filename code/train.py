@@ -90,15 +90,13 @@ def main():
         }, os.path.join(args.outdir, 'checkpoint.pth.tar'))
 
 
-def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float):
+def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Optimizer, epoch: int, noise_sd: float, device):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
     end = time.time()
-
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # switch to train mode
     model.train()
@@ -110,7 +108,6 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
         inputs = inputs.to(device)
         targets = targets.to(device)
 
-        print("Computing device used: ", device)
         # augment inputs with noise
         inputs = inputs + torch.randn_like(inputs, device=device) * noise_sd
 
@@ -147,15 +144,13 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
     return (losses.avg, top1.avg)
 
 
-def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd: float):
+def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd: float, device):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
     end = time.time()
-
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # switch to eval mode
     model.eval()
