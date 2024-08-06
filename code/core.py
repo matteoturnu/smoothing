@@ -21,7 +21,7 @@ class Smooth(object):
         self.num_classes = num_classes
         self.sigma = sigma
 
-    def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int) -> (int, float):
+    def certify(self, x: torch.tensor, n0: int, n: int, alpha: float, batch_size: int, device) -> (int, float):
         """ Monte Carlo algorithm for certifying that g's prediction around x is constant within some L2 radius.
         With probability at least 1 - alpha, the class returned by this method will equal g(x), and g's prediction will
         robust within a L2 ball of radius R around x.
@@ -36,11 +36,11 @@ class Smooth(object):
         """
         self.base_classifier.eval()
         # draw samples of f(x+ epsilon)
-        counts_selection = self._sample_noise(x, n0, batch_size)
+        counts_selection = self._sample_noise(x, n0, batch_size, device)
         # use these samples to take a guess at the top class
         cAHat = counts_selection.argmax().item()
         # draw more samples of f(x + epsilon)
-        counts_estimation = self._sample_noise(x, n, batch_size)
+        counts_estimation = self._sample_noise(x, n, batch_size, device)
         # use these samples to estimate a lower bound on pA
         nA = counts_estimation[cAHat].item()
         pABar = self._lower_confidence_bound(nA, n, alpha)
@@ -50,7 +50,7 @@ class Smooth(object):
             radius = self.sigma * norm.ppf(pABar)
             return cAHat, radius
 
-    def predict(self, x: torch.tensor, n: int, alpha: float, batch_size: int) -> int:
+    def predict(self, x: torch.tensor, n: int, alpha: float, batch_size: int, device) -> int:
         """ Monte Carlo algorithm for evaluating the prediction of g at x.  With probability at least 1 - alpha, the
         class returned by this method will equal g(x).
 
@@ -64,7 +64,7 @@ class Smooth(object):
         :return: the predicted class, or ABSTAIN
         """
         self.base_classifier.eval()
-        counts = self._sample_noise(x, n, batch_size)
+        counts = self._sample_noise(x, n, batch_size, device)
         top2 = counts.argsort()[::-1][:2]
         count1 = counts[top2[0]]
         count2 = counts[top2[1]]
@@ -73,7 +73,7 @@ class Smooth(object):
         else:
             return top2[0]
 
-    def _sample_noise(self, x: torch.tensor, num: int, batch_size) -> np.ndarray:
+    def _sample_noise(self, x: torch.tensor, num: int, batch_size, device) -> np.ndarray:
         """ Sample the base classifier's prediction under noisy corruptions of the input x.
 
         :param x: the input [channel x width x height]
@@ -88,7 +88,7 @@ class Smooth(object):
                 num -= this_batch_size
 
                 batch = x.repeat((this_batch_size, 1, 1, 1))
-                noise = torch.randn_like(batch, device='cuda') * self.sigma
+                noise = torch.randn_like(batch, device=device) * self.sigma
                 predictions = self.base_classifier(batch + noise).argmax(1)
                 counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
             return counts
