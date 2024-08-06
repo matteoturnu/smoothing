@@ -110,6 +110,7 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
         inputs = inputs.to(device)
         targets = targets.to(device)
 
+        print("Computing device used: ", device)
         # augment inputs with noise
         inputs = inputs + torch.randn_like(inputs, device=device) * noise_sd
 
