@@ -46,6 +46,7 @@ args = parser.parse_args()
 """
 
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 def main():
     if args.gpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
@@ -104,8 +105,8 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
         # measure data loading time
         data_time.update(time.time() - end)
 
-        inputs = inputs.cuda()
-        targets = targets.cuda()
+        inputs = inputs.to(device)
+        targets = targets.to(device)
 
         # augment inputs with noise
         inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
@@ -159,8 +160,10 @@ def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd:
             # measure data loading time
             data_time.update(time.time() - end)
 
-            inputs = inputs.cuda()
-            targets = targets.cuda()
+            """inputs = inputs.cuda()
+            targets = targets.cuda()"""
+            inputs = inputs.to(device)
+            targets = targets.to(device)
 
             # augment inputs with noise
             inputs = inputs + torch.randn_like(inputs, device='cuda') * noise_sd
