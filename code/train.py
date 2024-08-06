@@ -143,7 +143,7 @@ def train(loader: DataLoader, model: torch.nn.Module, criterion, optimizer: Opti
     return (losses.avg, top1.avg)
 
 
-def test(loader: DataLoader, model: torch.nn.Module, criterion, noise_sd: float):
+def test(loader: DataLoader, model: torch.nn.Module, criterion, epoch, noise_sd: float):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
