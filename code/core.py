@@ -100,24 +100,24 @@ class Smooth(object):
             return counts
 
     def _sample_noise_linf(self, x: torch.tensor, num: int, batch_size, device) -> np.ndarray:
-    """ Sample the base classifier's prediction under noisy corruptions of the input x using Linf noise.
-
-    :param x: the input [channel x width x height]
-    :param num: number of samples to collect
-    :param batch_size:
-    :return: an ndarray[int] of length num_classes containing the per-class counts
-    """
-    with torch.no_grad():
-        counts = np.zeros(self.num_classes, dtype=int)
-        for _ in range(ceil(num / batch_size)):
-            this_batch_size = min(batch_size, num)
-            num -= this_batch_size
-
-            batch = x.repeat((this_batch_size, 1, 1, 1))
-            noise = (torch.rand_like(batch, device=device) * 2 - 1) * self.sigma  # Uniform noise in [-sigma, sigma]
-            predictions = self.base_classifier(batch + noise).argmax(1)
-            counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
-        return counts
+        """ Sample the base classifier's prediction under noisy corruptions of the input x using Linf noise.
+    
+        :param x: the input [channel x width x height]
+        :param num: number of samples to collect
+        :param batch_size:
+        :return: an ndarray[int] of length num_classes containing the per-class counts
+        """
+        with torch.no_grad():
+            counts = np.zeros(self.num_classes, dtype=int)
+            for _ in range(ceil(num / batch_size)):
+                this_batch_size = min(batch_size, num)
+                num -= this_batch_size
+    
+                batch = x.repeat((this_batch_size, 1, 1, 1))
+                noise = (torch.rand_like(batch, device=device) * 2 - 1) * self.sigma  # Uniform noise in [-sigma, sigma]
+                predictions = self.base_classifier(batch + noise).argmax(1)
+                counts += self._count_arr(predictions.cpu().numpy(), self.num_classes)
+            return counts
 
     def _count_arr(self, arr: np.ndarray, length: int) -> np.ndarray:
         counts = np.zeros(length, dtype=int)
