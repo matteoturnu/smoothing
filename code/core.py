@@ -43,9 +43,9 @@ class Smooth(object):
         # use these samples to take a guess at the top class
         cAHat = counts_selection.argmax().item()
         # draw more samples of f(x + epsilon)
-        if norm == 'L2':
+        if L == 'L2':
             counts_estimation = self._sample_noise(x, n, batch_size, device)
-        elif norm == 'Linf':
+        elif L == 'Linf':
             counts_estimation = self._sample_noise_linf(x, n, batch_size, device)
         # use these samples to estimate a lower bound on pA
         nA = counts_estimation[cAHat].item()
