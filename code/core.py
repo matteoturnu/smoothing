@@ -35,18 +35,16 @@ class Smooth(object):
                  in the case of abstention, the class will be ABSTAIN and the radius 0.
         """
         self.base_classifier.eval()
-        # draw samples of f(x+ epsilon)
         if L == 'L2':
+            # draw samples of f(x+ epsilon)
             counts_selection = self._sample_noise(x, n0, batch_size, device)
-        elif L == 'Linf':
-            counts_selection = self._sample_noise_linf(x, n0, batch_size, device)
-        # use these samples to take a guess at the top class
-        cAHat = counts_selection.argmax().item()
-        # draw more samples of f(x + epsilon)
-        if L == 'L2':
+            # draw more samples of f(x + epsilon)
             counts_estimation = self._sample_noise(x, n, batch_size, device)
         elif L == 'Linf':
+            counts_selection = self._sample_noise_linf(x, n0, batch_size, device)
             counts_estimation = self._sample_noise_linf(x, n, batch_size, device)
+        # use these samples to take a guess at the top class
+        cAHat = counts_selection.argmax().item()
         # use these samples to estimate a lower bound on pA
         nA = counts_estimation[cAHat].item()
         pABar = self._lower_confidence_bound(nA, n, alpha)
