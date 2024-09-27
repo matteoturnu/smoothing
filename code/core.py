@@ -62,34 +62,34 @@ class Smooth(object):
                 radius = self.sigma * norm.ppf(pABar) / np.sqrt(x.numel())  # Adjust radius for Linf
             return cAHat, radius
 
-def predict(self, x: torch.tensor, n: int, alpha: float, batch_size: int, device, L: str) -> int:
-    """ Monte Carlo algorithm for evaluating the prediction of g at x under L2 or Linf norm.  
-    With probability at least 1 - alpha, the class returned by this method will equal g(x).
-
-    :param x: the input [channel x height x width]
-    :param n: the number of Monte Carlo samples to use
-    :param alpha: the failure probability
-    :param batch_size: batch size to use when evaluating the base classifier
-    :param L: the norm to use ('L2' or 'Linf')
-    :return: the predicted class, or ABSTAIN
-    """
-    self.base_classifier.eval()
+    def predict(self, x: torch.tensor, n: int, alpha: float, batch_size: int, device, L: str) -> int:
+        """ Monte Carlo algorithm for evaluating the prediction of g at x under L2 or Linf norm.  
+        With probability at least 1 - alpha, the class returned by this method will equal g(x).
     
-    if L == 'L2':
-        counts = self._sample_noise(x, n, batch_size, device)
-    elif L == 'Linf':
-        counts = self._sample_noise_linf(x, n, batch_size, device)
-    else:
-        raise ValueError("Norm type not recognized. Use 'L2' or 'Linf'.")
-    
-    top2 = counts.argsort()[::-1][:2]
-    count1 = counts[top2[0]]
-    count2 = counts[top2[1]]
-    
-    if binomtest(count1, count1 + count2, p=0.5).pvalue > alpha:
-        return Smooth.ABSTAIN
-    else:
-        return top2[0]
+        :param x: the input [channel x height x width]
+        :param n: the number of Monte Carlo samples to use
+        :param alpha: the failure probability
+        :param batch_size: batch size to use when evaluating the base classifier
+        :param L: the norm to use ('L2' or 'Linf')
+        :return: the predicted class, or ABSTAIN
+        """
+        self.base_classifier.eval()
+        
+        if L == 'L2':
+            counts = self._sample_noise(x, n, batch_size, device)
+        elif L == 'Linf':
+            counts = self._sample_noise_linf(x, n, batch_size, device)
+        else:
+            raise ValueError("Norm type not recognized. Use 'L2' or 'Linf'.")
+        
+        top2 = counts.argsort()[::-1][:2]
+        count1 = counts[top2[0]]
+        count2 = counts[top2[1]]
+        
+        if binomtest(count1, count1 + count2, p=0.5).pvalue > alpha:
+            return Smooth.ABSTAIN
+        else:
+            return top2[0]
     
     def _sample_noise(self, x: torch.tensor, num: int, batch_size, device) -> np.ndarray:
         """ Sample the base classifier's prediction under noisy corruptions of the input x.
