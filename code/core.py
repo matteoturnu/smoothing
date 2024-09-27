@@ -59,7 +59,7 @@ class Smooth(object):
             if L == 'L2':
                 radius = self.sigma * norm.ppf(pABar)
             elif L == 'Linf':
-                radius = self.sigma * norm.ppf(pABar) / np.sqrt(x.numel())  # Adjust radius for Linf
+                radius = self.sigma * (2 * pABar - 1)  # Linear scaling for uniform distribution in [-sigma, sigma]
             return cAHat, radius
 
     def predict(self, x: torch.tensor, n: int, alpha: float, batch_size: int, device, L: str) -> int:
